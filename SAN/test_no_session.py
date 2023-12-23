@@ -1,34 +1,24 @@
 import os
-
-
 os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
 from cir_net_FOV_mb import *
 from polar_input_data_orien_FOV_3_Segmap_Concatenation import InputData
 from VGG_no_session import *
-
 import tensorflow as tf
 from tensorflow import keras
-
 import numpy as np
 import sys
 import argparse
 from PIL import Image
 import scipy.io as scio
-from VGG16_SegMap import *
-from distance import *
 from numpy import fft
 
 #tf.compat.v1.disable_eager_execution()
 tf.compat.v1.enable_eager_execution()
 parser = argparse.ArgumentParser(description='TensorFlow implementation.')
 
-parser.add_argument('--network_type', type=str, help='network type', default='VGG_13_conv_v2_cir')
-
 parser.add_argument('--start_epoch', type=int, help='from epoch', default=0)
 parser.add_argument('--number_of_epoch', type=int, help='number_of_epoch', default=100)
-parser.add_argument('--polar', type=int, help='0 or 1', default=1)
 
 parser.add_argument('--train_grd_noise', type=int, help='0~360', default=360)
 parser.add_argument('--test_grd_noise', type=int, help='0~360', default=0)
@@ -38,34 +28,22 @@ parser.add_argument('--test_grd_FOV', type=int, help='70, 90, 180, 360', default
 
 args = parser.parse_args()
 
-# --------------  configuration parameters  -------------- #
-# the type of network to be used: "CVM-NET-I" or "CVM-NET-II"
-network_type = args.network_type
-
-start_epoch = 0#args.start_epoch
-polar = args.polar
-
+# Save parameters --------------------------------------- #
+start_epoch = args.start_epoch
 train_grd_noise = args.train_grd_noise
 test_grd_noise = args.test_grd_noise
-
 train_grd_FOV = args.train_grd_FOV
 test_grd_FOV = args.test_grd_FOV
-
-number_of_epoch = 5
-"""args.number_of_epoch"""
-
-data_type = 'CVUSA'
-
+number_of_epoch = args.number_of_epoch
 loss_type = 'l1'
-
 batch_size = 8
 is_training = True
 loss_weight = 10.0
-
 learning_rate_val = 1e-5
 keep_prob_val = 0.8
 keep_prob = 0.8
 dimension = 4
+
 print("SETTED PARAMETERS: ")
 print("Train ground FOV: {}".format(train_grd_FOV))
 print("Train ground noise: {}".format(train_grd_noise))
@@ -92,9 +70,7 @@ def validate(dist_array, topK):
 
 def compute_loss(dist_array):
 
-
     pos_dist = tf.linalg.tensor_diag_part(dist_array)
-
     pair_n = batch_size * (batch_size - 1.0)
 
     # satellite to ground
@@ -113,33 +89,20 @@ def train(start_epoch=14):
     Train the network and do the test
     :param start_epoch: the epoch id start to train. The first epoch is 0.
     '''
-
     # import data
     input_data = InputData()
-    #test_grd_FOV = 360
     width = int(test_grd_FOV / 360 * 512)
-    #learning_rate_val = 1e-4
-    # Assuming you have defined the CustomModel and have the training data ready
-
-    # Define the loss function
-    #loss_fn = tf.keras.losses.BinaryCrossentropy()
 
     # Define the optimizer
     optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate_val)
 
-    # Define the metrics
-    metrics = [tf.keras.metrics.BinaryAccuracy()]
-
-    #satNet = VGG_SegMap("sat") 
     groundNet = VGGModel(tf.keras.Input(shape=(None, None, 3)))
     satNet = VGGModelCir(tf.keras.Input(shape=(None, None, 3)),'_sat')
     segMapNet = VGGModelCir(tf.keras.Input(shape=(None, None, 3)),'_seg')
     
     processor = ProcessFeatures()
 
-    #combined_output = tf.keras.layers.concatenate([groundNet.model.output, satNet.model.output])
     model = Model(inputs=[groundNet.model.input, satNet.model.input, segMapNet.model.input], outputs=[groundNet.model.output, satNet.model.output, segMapNet.model.output])    
-    #model = Model(inputs=[groundNet.model.input, satNet.model.input], outputs=[groundNet.model.output, satNet.model.output])    
     print("Model created")
 
 
@@ -149,7 +112,6 @@ def train(start_epoch=14):
     segmap_x = np.float32(np.zeros([2, 128, 512, 3]))
 
     grd_features, sat_features, segmap_features = model([grd_x, polar_sat_x, segmap_x])
-    #grd_features, sat_features = model([grd_x, polar_sat_x])
     sat_features = tf.concat([sat_features, segmap_features], axis=-1)
     
     # build model
@@ -163,7 +125,7 @@ def train(start_epoch=14):
     pred_orientation = np.zeros([input_data.get_test_dataset_size()])
 
     # load Model
-    model_path = "./saved_models/FOV90_segmap_concatenation/27/"
+    model_path = "./saved_models/path/epoch/"
     model = keras.models.load_model(model_path)
     print("Model checkpoint uploaded")
 
@@ -177,7 +139,6 @@ def train(start_epoch=14):
                                                                         FOV=test_grd_FOV)
         if batch_sat is None:
             break
-        #grd_features, sat_features = model([batch_grd, batch_sat_polar])
         grd_features, sat_features, segmap_features = model([batch_grd, batch_sat_polar, batch_segmap])
         sat_features = tf.concat([sat_features, segmap_features], axis=-1)
         
@@ -191,7 +152,7 @@ def train(start_epoch=14):
         val_i += sat_matrix.shape[0]
         count += 1
 
-    file = './saved_models/FOV90_segmap_concatenation/topk_360_fov.mat'
+    file = './saved_models/path/filename.mat'
     scio.savemat(file, {'orientation_gth': orientation_gth, 'grd_descriptor': grd_global_matrix, 'sat_descriptor': sat_global_matrix})
     grd_descriptor = grd_global_matrix
     sat_descriptor = sat_global_matrix
@@ -203,30 +164,21 @@ def train(start_epoch=14):
     top1_percent = int(data_amount * 0.01) + 1
     print('      top1_percent %d' % top1_percent)
 
-    if test_grd_noise == 0:
-        
+    if test_grd_noise == 0:  
         sat_descriptor = np.reshape(sat_global_matrix[:, :, :g_width, :], [-1, g_height * g_width * g_channel])
         sat_descriptor = sat_descriptor / np.linalg.norm(sat_descriptor, axis=-1, keepdims=True)
         grd_descriptor = np.reshape(grd_global_matrix, [-1, g_height * g_width * g_channel])
 
         dist_array = 2 - 2 * np.matmul(grd_descriptor, np.transpose(sat_descriptor))
         #dist_array = 2 - 2 * np.matmul(grd_descriptor, sat_descriptor.transpose())
-
-        #ME
+ 
         val_accuracy = validate(dist_array, 1)
         print('accuracy = %.1f%%' % (val_accuracy * 100.0))
-        #with open('./saved_models/FOV180_Original/FOV180_Original.txt', 'a') as file:
-        #        file.write(str(epoch) + ': ' + str(val_accuracy) + ', Loss: ' + str(loss_value.numpy()) + '\n')
-        #ME
+
         gt_dist = dist_array.diagonal()
         prediction = np.sum(dist_array < gt_dist.reshape(-1, 1), axis=-1)
-        #print("PREDICTION")
-        #print(prediction)
         loc_acc = np.sum(prediction.reshape(-1, 1) < np.arange(top1_percent), axis=0) / data_amount
-        #print("LOCC_ACC")
-        #print(loc_acc)
         scio.savemat(file, {'loc_acc': loc_acc, 'grd_descriptor': grd_descriptor, 'sat_descriptor': sat_descriptor}) 
    
-
 if __name__ == '__main__':
     train(start_epoch)

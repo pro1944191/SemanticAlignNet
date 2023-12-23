@@ -8,6 +8,8 @@ from PIL import Image
 class InputData:
 
     img_root = '../Data/CVUSA_subset/'
+
+    # Mean and standard deviation of the used subset
     ground_mean = np.array([[0.46,0.48,0.47]])
     ground_std = np.array([[0.24,0.20,0.21]])
     sat_polar_mean = np.array([[0.36,0.41,0.40]])
