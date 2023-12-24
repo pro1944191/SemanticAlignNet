@@ -9,17 +9,15 @@
 ![plot](./Model_f.png)
 
 ## Requirements
-1. This code uses TensorFlow 2.10.0 and numpy 1.25.2, with a modern GPU of at least 6GB of memory
-2. We ram the code with Python 3.9.2
+1. This code uses ```TensorFlow 2.10.0``` ```numpy 1.25.2``` ```cv2 4.8.0``` and run on modern GPU of at least 6GB of memory
+2. We run the code with ```Python 3.9.2```
 3. Download the used CVUSA subset at the following link: 
 
 ## Steps
 - Clone the repository 
     - ```git clone https://github.com/pro1944191/SemanticAlignNet```
 - For training run the following command:
-    ```
-    python train_no_session.py --train_grd_noise 360 --train_grd_FOV $YOUR_FOV --test_grd_FOV $YOUR_FOV
-    ```
+    - ```python train_no_session.py --train_grd_noise 360 --train_grd_FOV $YOUR_FOV --test_grd_FOV $YOUR_FOV```
     - This command will run the python ```file train_no_session.py```, inside the file there are other possible parameters to pass as input or to leave as default value
     - ```$YOUR_FOV``` chose a value bewteen 0 and 360, that is the FoV value used for the ground view images
 
