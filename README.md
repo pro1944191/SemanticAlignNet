@@ -29,9 +29,9 @@
     - The results of the testing phase will be saved in a ```.mat``` file
 - Dataset
     - Once you downloaded the dataset you will have the following folders:
-        - ```Streetview```: this folder contains the ground view images (streetview)
-        - ```Bingmap```: this folder contains the original satellite view images
-        - ```Segmap```: here are contained the original segmented mask images
-        - ```Polarmap```: 
-            - ```/normal```: this subfolder contains the polar transformed satellite images
-            - ```/segmap```: this subfolder contains the polar transformed segmetation mask images
+        - ```Streetview``` this folder contains the ground view images (streetview)
+        - ```Bingmap``` this folder contains the original satellite view images
+        - ```Segmap``` here are contained the original segmented mask images
+        - ```Polarmap/``` 
+            - ```/normal``` this subfolder contains the polar transformed satellite images
+            - ```/segmap``` this subfolder contains the polar transformed segmetation mask images
