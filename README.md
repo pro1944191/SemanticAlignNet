@@ -12,9 +12,10 @@
 1. This code uses ```TensorFlow 2.10.0``` ```numpy 1.25.2``` ```cv2 4.8.0``` and run on modern GPU of at least 6GB of memory
 2. We run the code with ```Python 3.9.2```
 3. Download the used CVUSA subset at the following link: 
+    - https://drive.google.com/file/d/17W9VEPMneRlb6igtSxa--Xh4fSZs3RS_/view?usp=sharing
 
 ## Steps
-- Clone the repository 
+- Clone this repository 
     - ```git clone https://github.com/pro1944191/SemanticAlignNet```
 - For training run the following command from the shell:
     - ```python train_no_session.py --train_grd_noise 360 --train_grd_FOV $YOUR_FOV --test_grd_FOV $YOUR_FOV```
@@ -24,8 +25,15 @@
 - For testing run the following command from the shell:
     - ```python test_no_session.py --train_grd_noise 360 --train_grd_FOV $YOUR_FOV --test_grd_FOV $YOUR_FOV```
     - This command will run the python file ```test_no_session.py```, inside it there are other possible parameters to pass as input or to leave as default value
-- Data preparation part (polar transformed images)
-- To use the dataset change relative links inside the files
+    - The results of the testing phase will be saved in a ```.mat``` file
+- Dataset
+    - Once you downloaded the dataset you will have the following folders:
+        - Streetview: this folder contains the ground view images (streetview)
+        - Bingmap: this folder contains the original satellite view images
+        - Segmap: here are contained the original segmented mask images
+        - Polarmap: 
+            - /normal: this subfolder contains the polar transformed satellite images
+            - /segmap: this subfolder contains the polar transformed segmetation mask images
 
 File explaination(?)
 
