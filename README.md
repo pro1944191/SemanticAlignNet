@@ -20,9 +20,9 @@
     - ```python train_no_session.py --train_grd_noise 360 --train_grd_FOV $YOUR_FOV --test_grd_FOV $YOUR_FOV```
     - This command will run the python file ```train_no_session.py```, inside it there are other possible parameters to pass as input or to leave as default value
     - ```$YOUR_FOV``` chose a value bewteen 0° and 360°, that is the FoV value used for the ground view images
-    - Testing part
-    - Data preparation part (polar transformed images)
-    - To use the dataset change relative links inside the files
+- Testing part
+- Data preparation part (polar transformed images)
+- To use the dataset change relative links inside the files
 
 File explaination(?)
 
