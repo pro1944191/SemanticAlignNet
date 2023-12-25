@@ -16,11 +16,14 @@
 ## Steps
 - Clone the repository 
     - ```git clone https://github.com/pro1944191/SemanticAlignNet```
-- For training run the following command:
+- For training run the following command from the shell:
     - ```python train_no_session.py --train_grd_noise 360 --train_grd_FOV $YOUR_FOV --test_grd_FOV $YOUR_FOV```
     - This command will run the python file ```train_no_session.py```, inside it there are other possible parameters to pass as input or to leave as default value
     - ```$YOUR_FOV``` chose a value bewteen 0° and 360°, that is the FoV value used for the ground view images
-- Testing part
+    - The trained model will be saved in the path ```./saved_models/model_name/```, will be created a folder for each trained epoch and a ```.txt``` file with a recap of the training
+- For testing run the following command from the shell:
+    - ```python test_no_session.py --train_grd_noise 360 --train_grd_FOV $YOUR_FOV --test_grd_FOV $YOUR_FOV```
+    - This command will run the python file ```test_no_session.py```, inside it there are other possible parameters to pass as input or to leave as default value
 - Data preparation part (polar transformed images)
 - To use the dataset change relative links inside the files
 
