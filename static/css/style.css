@@ -29,8 +29,12 @@ body {
     font-family: 'Google Sans', sans-serif;
   }
   
-  
+  .title.is-1 {
+    font-size: 3rem;
+  }
+
   .publication-title {
+    
   }
   
   .publication-banner {
