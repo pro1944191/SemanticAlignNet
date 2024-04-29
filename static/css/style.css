@@ -1,14 +1,6 @@
-
 body {
-  
+    font-family: 'Noto Sans', sans-serif;
     text-align: center;
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #212529;
-    background-color: #fff;
   }
   
   
@@ -36,12 +28,8 @@ body {
     font-family: 'Google Sans', sans-serif;
   }
   
-  .title.is-1 {
-    font-size: 3rem;
-  }
-
+  
   .publication-title {
-    
   }
   
   .publication-banner {
@@ -94,7 +82,23 @@ body {
   .author-block {
     display: inline-block;
   }
-  
+
+  td { 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    word-wrap: break-word;
+}
+  .methodname {
+    font-variant: small-caps;
+    font-variant-ligatures: normal;
+    font-variant-numeric: normal;
+    font-variant-east-asian: normal;
+    font-variant-caps: small-caps;
+    font-variant-alternates: normal;
+    font-variant-position: normal;
+}
+
+
   .publication-banner img {
   }
   
@@ -145,4 +149,3 @@ body {
   .eql-cntrb { 
     font-size: smaller;
   }
-  
